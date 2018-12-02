@@ -1,6 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace MicrophonePlugin
 {
@@ -63,7 +65,14 @@ namespace MicrophonePlugin
             }
             set
             {
-                _capsuleDiametr = double.Parse(value);
+                try
+                {
+                    _capsuleDiametr = double.Parse(value);
+                }
+                catch
+                {
+                    throw new ArgumentException("Недопустимые символы");
+                }
             }
         }
 
@@ -93,7 +102,14 @@ namespace MicrophonePlugin
             }
             set
             {
-                _handleLenght = double.Parse(value);
+                try
+                {
+                    _handleLenght = double.Parse(value);
+                }
+                catch
+                {
+                    throw new ArgumentException("Недопустимые символы");
+                }
             }
         }
 
