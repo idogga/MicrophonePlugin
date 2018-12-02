@@ -64,7 +64,8 @@
                 <TextBox.Text>
                     <Binding Path="CapsuleRadius" 
                              Mode="TwoWay"
-                             NotifyOnValidationError="True">
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -81,7 +82,8 @@
                 <TextBox.Text>
                     <Binding Path="HandleDiametr" 
                              Mode="TwoWay"
-                             NotifyOnValidationError="True">
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -98,7 +100,8 @@
                 <TextBox.Text>
                     <Binding Path="HandleLenght" 
                              Mode="TwoWay"
-                             NotifyOnValidationError="True">
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -115,7 +118,8 @@
                 <TextBox.Text>
                     <Binding Path="ClipLenght" 
                              Mode="TwoWay"
-                             NotifyOnValidationError="True">
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -132,7 +136,8 @@
                 <TextBox.Text>
                     <Binding Path="TotalLenght" 
                              Mode="TwoWay"
-                             NotifyOnValidationError="True">
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>

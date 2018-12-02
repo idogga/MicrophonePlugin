@@ -34,7 +34,6 @@ namespace MicrophonePlugin
         /// </summary>
         public DelegateCommand MakeDefault { get; }
         
-        private void PropertyChange() { }
 
         /// <summary>
         /// Общая длина микрофона
@@ -47,7 +46,22 @@ namespace MicrophonePlugin
             }
             set
             {
-                _totalLenght = double.Parse(value);
+                try
+                {
+                    _totalLenght = double.Parse(value);
+                }
+                catch
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Недопустимые символы");
+                }
+                if (_totalLenght <= _capsuleDiametr + _handleLenght + _clipLenght)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима");
+                }
+                IsEnableBuild = true;
+                PropertyChange();
             }
         }
 
@@ -71,8 +85,21 @@ namespace MicrophonePlugin
                 }
                 catch
                 {
+                    IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
+                if (_capsuleDiametr <= _handleDiametr * 1.5)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки");
+                }
+                if (_capsuleDiametr > 120)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Диаметр капсюли должен быть меньше 120 мм");
+                }
+                IsEnableBuild = true;
+                PropertyChange();
             }
         }
 
@@ -87,7 +114,27 @@ namespace MicrophonePlugin
             }
             set
             {
-                _handleDiametr = double.Parse(value);
+                try
+                {
+                    _handleDiametr = double.Parse(value);
+                }
+                catch
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Недопустимые символы");
+                }
+                if (_handleDiametr <= 30)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Диаметр ручки должен быть больше 30 мм");
+                }
+                if (_handleDiametr > 80)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Диаметр ручки должен быть меньше 80 мм");
+                }
+                IsEnableBuild = true;
+                PropertyChange();
             }
         }
 
@@ -108,8 +155,16 @@ namespace MicrophonePlugin
                 }
                 catch
                 {
+                    IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
+                if (_handleLenght <= 110)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Длина ручки должна быть больше 110 мм");
+                }
+                IsEnableBuild = true;
+                PropertyChange();
             }
         }
 
@@ -146,17 +201,23 @@ namespace MicrophonePlugin
             MakeDefault = new DelegateCommand(() =>
             {
                 TotalLenght = _totalLenghtConst.ToString("0.##");
-                RaisePropertyChanged("TotalLenght");
                 HandleLenght = _handleLenghtConst.ToString("0.##");
-                RaisePropertyChanged("HandleLenght");
                 ClipLenght = _clipLenghtConst.ToString("0.##");
-                RaisePropertyChanged("ClipLenght");
                 HandleDiametr = _handleDiametrConst.ToString("0.##"); ;
-                RaisePropertyChanged("HandleDiametr");
                 CapsuleRadius = _capsuleDiametrConst.ToString("0.##");
-                RaisePropertyChanged("CapsuleRadius");
+                PropertyChange();
                 Debug.WriteLine("Установить значение по-умолчанию");
             });
+        }
+
+
+        private void PropertyChange()
+        {
+            RaisePropertyChanged("TotalLenght");
+            RaisePropertyChanged("HandleLenght");
+            RaisePropertyChanged("ClipLenght");
+            RaisePropertyChanged("HandleDiametr");
+            RaisePropertyChanged("CapsuleRadius");
         }
     }
 }
