@@ -12,7 +12,7 @@ namespace MicrophonePlugin
     public class MicroVM : BindableBase
     {
         #region const
-        private const double _totalLenghtConst = 320;
+        private const double _totalLenghtConst = 400;
         private const double _capsuleDiametrConst = 80;
         private const double _handleDiametrConst = 50;
         private const double _handleLenghtConst = 250;
@@ -23,7 +23,7 @@ namespace MicrophonePlugin
         private double _handleDiametr = _handleDiametrConst;
         private double _handleLenght = _handleLenghtConst;
         private double _clipLenght = _clipLenghtConst;
-
+        private bool? _isEnableBuild = true;
         /// <summary>
         /// Построение можели
         /// </summary>
@@ -186,7 +186,15 @@ namespace MicrophonePlugin
         /// <summary>
         /// Доступность построения
         /// </summary>
-        public bool IsEnableBuild { get; set; } = true;
+        public bool? IsEnableBuild
+        { get
+            { return _isEnableBuild; }
+            set
+            {
+                _isEnableBuild = value;
+                RaisePropertyChanged("IsEnableBuild");
+            }
+        }
 
         /// <summary>
         /// Конструктор
@@ -196,6 +204,9 @@ namespace MicrophonePlugin
             Build = new DelegateCommand(() =>
             {
                 Debug.WriteLine("Построить");
+                using (var builder = new Builder(_capsuleDiametr, _clipLenght, _handleDiametr, _handleLenght, _totalLenght))
+                {
+                }
             });
 
             MakeDefault = new DelegateCommand(() =>
