@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System.Diagnostics;
 
 namespace MicrophonePlugin
 {
@@ -17,12 +18,12 @@ namespace MicrophonePlugin
         /// <summary>
         /// Построение можели
         /// </summary>
-        public DelegateCommand Build;
+        public DelegateCommand Build { get; }
 
         /// <summary>
         /// Установка значений по-умолчанию
         /// </summary>
-        public DelegateCommand MakeDefault;
+        public DelegateCommand MakeDefault { get; }
         
         private void PropertyChange() { }
 
@@ -61,7 +62,19 @@ namespace MicrophonePlugin
         /// <summary>
         /// Доступность построения
         /// </summary>
-        public bool IsEnableBuild { get; set; }
+        public bool IsEnableBuild { get; set; } = true;
 
+        public MicroVM()
+        {
+            Build = new DelegateCommand(() =>
+            {
+                Debug.WriteLine("Построить");
+            });
+
+            MakeDefault = new DelegateCommand(() =>
+            {
+                Debug.WriteLine("Установить значение по-умолчанию");
+            });
+        }
     }
 }

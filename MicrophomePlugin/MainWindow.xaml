@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MicrophonePlugin"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" 
+        Height="400" 
+        Width="300"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize">
+    <Window.DataContext>
+        <local:MicroVM/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="TextBlockButtonStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button IsEnabled="{Binding IsEnableBuild}"
+                    Command="{Binding Build}">
+                <TextBlock Text="Выполнить"
+                           Style="{DynamicResource TextBlockButtonStyle}"/>
+            </Button>
+            <Button Command="{Binding MakeDefault}">
+                <TextBlock Text="Очистить"
+                           Style="{DynamicResource TextBlockButtonStyle}"/>
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>
