@@ -15,6 +15,7 @@
     <Window.DataContext>
         <local:MicroVM/>
     </Window.DataContext>
+
     <Window.Resources>
         <Style x:Key="TextBlockButtonStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="10,5"/>

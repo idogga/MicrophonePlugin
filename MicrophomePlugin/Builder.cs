@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kompas6API5;
+using Kompas6Constants3D;
+using System;
 
 namespace MicrophonePlugin
 {
@@ -19,7 +21,10 @@ namespace MicrophonePlugin
         {
             using (var connector = new CadConnect())
             {
-
+                var document = connector.Connect();
+                document.Create(false, true);
+                document = (ksDocument3D)connector.Kompas.ActiveDocument3D();
+                var part = (ksPart)document.GetPart((short)Part_Type.pTop_Part);
             }
         }
 
@@ -28,7 +33,6 @@ namespace MicrophonePlugin
         /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }
