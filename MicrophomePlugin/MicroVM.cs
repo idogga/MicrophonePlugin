@@ -9,11 +9,18 @@ namespace MicrophonePlugin
     /// </summary>
     public class MicroVM : BindableBase
     {
-        private double _totalLenght = 80;
-        private double _capsuleRadius = 80;
-        private double _handleDiametr = 80;
-        private double _handleLenght = 80;
-        private double _clipLenght = 80;
+        #region const
+        private const double _totalLenghtConst = 320;
+        private const double _capsuleDiametrConst = 80;
+        private const double _handleDiametrConst = 50;
+        private const double _handleLenghtConst = 250;
+        private const double _clipLenghtConst = 15;
+        #endregion
+        private double _totalLenght = _totalLenghtConst;
+        private double _capsuleDiametr = _capsuleDiametrConst;
+        private double _handleDiametr = _handleDiametrConst;
+        private double _handleLenght = _handleLenghtConst;
+        private double _clipLenght = _clipLenghtConst;
 
         /// <summary>
         /// Построение можели
@@ -52,11 +59,11 @@ namespace MicrophonePlugin
         {
             get
             {
-                return _capsuleRadius.ToString("0.##");
+                return _capsuleDiametr.ToString("0.##");
             }
             set
             {
-                _capsuleRadius = double.Parse(value);
+                _capsuleDiametr = double.Parse(value);
             }
         }
 
@@ -122,6 +129,16 @@ namespace MicrophonePlugin
 
             MakeDefault = new DelegateCommand(() =>
             {
+                TotalLenght = _totalLenghtConst.ToString("0.##");
+                RaisePropertyChanged("TotalLenght");
+                HandleLenght = _handleLenghtConst.ToString("0.##");
+                RaisePropertyChanged("HandleLenght");
+                ClipLenght = _clipLenghtConst.ToString("0.##");
+                RaisePropertyChanged("ClipLenght");
+                HandleDiametr = _handleDiametrConst.ToString("0.##"); ;
+                RaisePropertyChanged("HandleDiametr");
+                CapsuleRadius = _capsuleDiametrConst.ToString("0.##");
+                RaisePropertyChanged("CapsuleRadius");
                 Debug.WriteLine("Установить значение по-умолчанию");
             });
         }
