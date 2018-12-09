@@ -3,6 +3,7 @@ using Prism.Mvvm;
 using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace MicrophonePlugin
@@ -326,12 +327,17 @@ namespace MicrophonePlugin
         /// </summary>
         public MicroVM()
         {
-            Build = new DelegateCommand(() =>
+            Build = new DelegateCommand(async () =>
             {
-                Debug.WriteLine("Построить");
-                using (var builder = new Builder(_capsuleDiametr, _clipLenght, _handleDiametr, _handleLenght, _totalLenght))
+                var waitWindow = new WaitWindow();
+                waitWindow.Show();
+                await Task.Factory.StartNew(() =>
                 {
-                }
+                    using (var builder = new Builder(_capsuleDiametr, _clipLenght, _handleDiametr, _handleLenght, _totalLenght))
+                    {
+                    }
+                });
+                waitWindow.Close();
             });
 
             MakeDefault = new DelegateCommand(() =>

@@ -49,18 +49,18 @@ namespace MicrophonePlugin
                 (0, 0, 0, handleRadius, 1);
             _sketchEdit.ksLineSeg
                 (0, handleRadius, handleLenght, handleRadius, 1);
-            var capsuleStartX = totalLenght - capsuleRadius * 2;
+            var capsuleStartX = totalLenght - capsuleRadius - clipLenght;
             _sketchEdit.ksLineSeg(handleLenght, handleRadius, capsuleStartX, capsuleRadius, 1);
-            _sketchEdit.ksLineSeg(capsuleStartX, capsuleRadius, capsuleStartX + clipLenght, capsuleRadius, 1);
-            _sketchEdit.ksArcByPoint(capsuleStartX + clipLenght, 0, capsuleRadius,
-                 totalLenght, 0, 
-                 capsuleStartX + clipLenght, capsuleRadius,
-                 1, 1);
-
+            _sketchEdit.ksLineSeg(capsuleStartX, capsuleRadius, totalLenght - capsuleRadius, capsuleRadius, 1);
+            _sketchEdit.ksArcByPoint(totalLenght - capsuleRadius, 0, 
+                capsuleRadius,
+                 totalLenght - capsuleRadius, capsuleRadius, 
+                 totalLenght, 0,
+                 -1, 1);
+            _sketchEdit.ksLineSeg(totalLenght, 0, 0, 0, 1);
             _sketchEdit.ksLineSeg
-                (-4, 0, totalLenght + 4, 0, 3);
+                (0, 0, totalLenght, 0, 3);
             _sketchDefinition.EndEdit();
-
             var entityRotated =
                 (ksEntity)part.NewEntity((short)Obj3dType.o3d_baseRotated);
             var entityRotatedDefinition =
@@ -70,6 +70,8 @@ namespace MicrophonePlugin
             entityRotatedDefinition.SetSideParam(true, 360);
             entityRotatedDefinition.SetSketch(_entitySketch);
             entityRotated.Create();
+            document.shadedWireframe = true;
+            document.drawMode = 3;
         }
 
 
