@@ -38,7 +38,7 @@ namespace MicrophonePlugin
         private void CreateBase(ksDocument3D document, double capsuleRadius, double clipLenght, double handleRadius, double handleLenght, double totalLenght)
         {
             var part = (ksPart)document.GetPart((short)Part_Type.pTop_Part);
-            var currentPlane = (ksEntity)part.GetDefaultEntity((short)Obj3dType.o3d_planeXOY);
+            var currentPlane = (ksEntity)part.GetDefaultEntity((short)Obj3dType.o3d_planeYOZ);
             var _entitySketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
             var _sketchDefinition = (ksSketchDefinition)_entitySketch.GetDefinition();
             _sketchDefinition.SetPlane(currentPlane);

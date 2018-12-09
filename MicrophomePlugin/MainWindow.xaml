@@ -151,7 +151,7 @@
             <Button x:Name="buildButton" IsEnabled="{Binding IsEnableBuild}"
                     Command="{Binding Build}"
                     Margin="5">
-                <TextBlock Text="Выполнить"
+                <TextBlock Text="Построить"
                            Style="{DynamicResource TextBlockButtonStyle}"/>
             </Button>
             <Button Command="{Binding MakeDefault}"

@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace MicrophonePlugin
@@ -17,6 +18,7 @@ namespace MicrophonePlugin
         private const double _handleDiametrConst = 50;
         private const double _handleLenghtConst = 250;
         private const double _clipLenghtConst = 15;
+
         #endregion
         private double _totalLenght = _totalLenghtConst;
         private double _capsuleDiametr = _capsuleDiametrConst;
@@ -42,26 +44,50 @@ namespace MicrophonePlugin
         {
             get
             {
-                return _totalLenght.ToString("0.##");
+                switch(_totalLenght * 1000 % 10)
+                {
+                    case 1:
+                        _totalLenght -= 0.001;
+                        return _totalLenght.ToString("0.##") + ",";
+                    case 2:
+                        _totalLenght -= 0.002;
+                        return _totalLenght.ToString("0.##") + ",0";
+                    case 3:
+                        _totalLenght -= 0.003;
+                        return _totalLenght.ToString("0.##") + ",00";
+                    default:
+                        return _totalLenght.ToString("0.##");
+                }
             }
             set
             {
+                var watch = new Stopwatch();
+                watch.Start();
                 try
                 {
-                    _totalLenght = double.Parse(value);
+                    _totalLenght = double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                    if (value.EndsWith(".") | value.EndsWith(","))
+                        _totalLenght += 0.001;
+                    if (value.EndsWith(",0"))
+                        _totalLenght += 0.002;
+                    if (value.EndsWith(",00"))
+                        _totalLenght += 0.003;
                 }
                 catch
                 {
                     IsEnableBuild = false;
+                    Debug.WriteLine("Parse {0} for {1}", value, watch.ElapsedMilliseconds);
                     throw new ArgumentException("Недопустимые символы");
                 }
+                Debug.WriteLine("Parse {0} for {1}", value, watch.ElapsedMilliseconds);
                 if (_totalLenght <= _capsuleDiametr + _handleLenght + _clipLenght)
                 {
                     IsEnableBuild = false;
+                    Debug.WriteLine("validate {0} for {1}", value, watch.ElapsedMilliseconds);
                     throw new ArgumentException("Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима");
                 }
                 IsEnableBuild = true;
-                PropertyChange();
+                Debug.WriteLine("validate {0} for {1}", value, watch.ElapsedMilliseconds);
             }
         }
 
@@ -75,13 +101,32 @@ namespace MicrophonePlugin
         {
             get
             {
-                return _capsuleDiametr.ToString("0.##");
+                switch (_capsuleDiametr * 1000 % 10)
+                {
+                    case 1:
+                        _capsuleDiametr -= 0.001;
+                        return _capsuleDiametr.ToString("0.##") + ",";
+                    case 2:
+                        _capsuleDiametr -= 0.002;
+                        return _capsuleDiametr.ToString("0.##") + ",0";
+                    case 3:
+                        _capsuleDiametr -= 0.003;
+                        return _capsuleDiametr.ToString("0.##") + ",00";
+                    default:
+                        return _capsuleDiametr.ToString("0.##");
+                }
             }
             set
             {
                 try
                 {
-                    _capsuleDiametr = double.Parse(value);
+                    _capsuleDiametr = Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                    if (value.EndsWith(".") | value.EndsWith(","))
+                        _capsuleDiametr += 0.001;
+                    if (value.EndsWith(",0"))
+                        _capsuleDiametr += 0.002;
+                    if (value.EndsWith(",00"))
+                        _capsuleDiametr += 0.003;
                 }
                 catch
                 {
@@ -99,7 +144,7 @@ namespace MicrophonePlugin
                     throw new ArgumentException("Диаметр капсюли должен быть меньше 120 мм");
                 }
                 IsEnableBuild = true;
-                PropertyChange();
+                RaisePropertyChanged("TotalLenght");
             }
         }
 
@@ -110,13 +155,32 @@ namespace MicrophonePlugin
         {
             get
             {
-                return _handleDiametr.ToString("0.##");
+                switch (_handleDiametr * 1000 % 10)
+                {
+                    case 1:
+                        _handleDiametr -= 0.001;
+                        return _handleDiametr.ToString("0.##") + ",";
+                    case 2:
+                        _handleDiametr -= 0.002;
+                        return _handleDiametr.ToString("0.##") + ",0";
+                    case 3:
+                        _handleDiametr -= 0.003;
+                        return _handleDiametr.ToString("0.##") + ",00";
+                    default:
+                        return _handleDiametr.ToString("0.##");
+                }
             }
             set
             {
                 try
                 {
-                    _handleDiametr = double.Parse(value);
+                    _handleDiametr = Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                    if (value.EndsWith(".") | value.EndsWith(","))
+                        _handleDiametr += 0.001;
+                    if (value.EndsWith(",0"))
+                        _handleDiametr += 0.002;
+                    if (value.EndsWith(",00"))
+                        _handleDiametr += 0.003;
                 }
                 catch
                 {
@@ -134,7 +198,7 @@ namespace MicrophonePlugin
                     throw new ArgumentException("Диаметр ручки должен быть меньше 80 мм");
                 }
                 IsEnableBuild = true;
-                PropertyChange();
+                RaisePropertyChanged("CapsuleRadius");
             }
         }
 
@@ -145,13 +209,32 @@ namespace MicrophonePlugin
         {
             get
             {
-                return _handleLenght.ToString("0.##");
+                switch (_handleLenght * 1000 % 10)
+                {
+                    case 1:
+                        _handleLenght -= 0.001;
+                        return _handleLenght.ToString("0.##") + ",";
+                    case 2:
+                        _handleLenght -= 0.002;
+                        return _handleLenght.ToString("0.##") + ",0";
+                    case 3:
+                        _handleLenght -= 0.003;
+                        return _handleLenght.ToString("0.##") + ",00";
+                    default:
+                        return _handleLenght.ToString("0.##");
+                }
             }
             set
             {
                 try
                 {
-                    _handleLenght = double.Parse(value);
+                    _handleLenght = Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                    if (value.EndsWith(".") | value.EndsWith(","))
+                        _handleLenght += 0.001;
+                    if (value.EndsWith(",0"))
+                        _handleLenght += 0.002;
+                    if (value.EndsWith(",00"))
+                        _handleLenght += 0.003;
                 }
                 catch
                 {
@@ -164,7 +247,7 @@ namespace MicrophonePlugin
                     throw new ArgumentException("Длина ручки должна быть больше 110 мм");
                 }
                 IsEnableBuild = true;
-                PropertyChange();
+                RaisePropertyChanged("TotalLenght");
             }
         }
 
@@ -175,11 +258,50 @@ namespace MicrophonePlugin
         {
             get
             {
-                return _clipLenght.ToString("0.##");
+                switch ((int)(_clipLenght * 1000 % 10))
+                {
+                    case 1:
+                        _clipLenght -= 0.001;
+                        return _clipLenght.ToString("0.##") + ",";
+                    case 2:
+                        _clipLenght -= 0.002;
+                        return _clipLenght.ToString("0.##") + ",0";
+                    case 3:
+                        _clipLenght -= 0.003;
+                        return _clipLenght.ToString("0.##") + ",00";
+                    default:
+                        return _clipLenght.ToString("0.##");
+                }
             }
             set
             {
-                _clipLenght = double.Parse(value);
+                try
+                {
+                    _clipLenght = Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                    if (value.EndsWith(".") | value.EndsWith(","))
+                        _clipLenght += 0.001;
+                    if (value.EndsWith(",0"))
+                        _clipLenght += 0.002;
+                    if (value.EndsWith(",00"))
+                        _clipLenght += 0.003;
+                }
+                catch
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Недопустимые символы");
+                }
+                if (_clipLenght <= 5)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Длина зажима для капсюли должна быть больше 5 мм");
+                }
+                if (_clipLenght > 20)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Длина зажима для капсюли должна быть меньше 20 мм");
+                }
+                IsEnableBuild = true;
+                RaisePropertyChanged("TotalLenght");
             }
         }
 
@@ -187,8 +309,11 @@ namespace MicrophonePlugin
         /// Доступность построения
         /// </summary>
         public bool? IsEnableBuild
-        { get
-            { return _isEnableBuild; }
+        {
+            get
+            {
+                return _isEnableBuild;
+            }
             set
             {
                 _isEnableBuild = value;
@@ -216,19 +341,8 @@ namespace MicrophonePlugin
                 ClipLenght = _clipLenghtConst.ToString("0.##");
                 HandleDiametr = _handleDiametrConst.ToString("0.##"); ;
                 CapsuleRadius = _capsuleDiametrConst.ToString("0.##");
-                PropertyChange();
                 Debug.WriteLine("Установить значение по-умолчанию");
             });
-        }
-
-
-        private void PropertyChange()
-        {
-            RaisePropertyChanged("TotalLenght");
-            RaisePropertyChanged("HandleLenght");
-            RaisePropertyChanged("ClipLenght");
-            RaisePropertyChanged("HandleDiametr");
-            RaisePropertyChanged("CapsuleRadius");
         }
     }
 }
