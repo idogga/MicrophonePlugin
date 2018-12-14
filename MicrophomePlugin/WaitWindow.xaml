@@ -10,11 +10,17 @@
         Height="240" 
         Width="233"
         WindowStartupLocation="CenterScreen"
-        Style="{StaticResource CustomWindow}">
+        Style="{StaticResource CustomWindow}"
+        WindowStyle="None"
+        Background="White">
     <Grid>
         <Image gif:ImageBehavior.AnimatedSource="images/travolta-gif-1.gif" 
                gif:ImageBehavior.RepeatBehavior="Forever"
                gif:ImageBehavior.AutoStart="True"
-               />
+               VerticalAlignment="Top"/>
+        <TextBlock Text="Обождите..."
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   FontStyle="Oblique"/>
     </Grid>
 </Window>
