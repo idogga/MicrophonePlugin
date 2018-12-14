@@ -136,7 +136,7 @@ namespace MicrophonePlugin
         {
             get
             {
-                        return _handleLenght;
+                return _handleLenght;
             }
             set
             {
