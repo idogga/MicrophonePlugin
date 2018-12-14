@@ -156,5 +156,8 @@
   <ItemGroup>
     <Resource Include="images\travolta-gif-1.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="images\splash_screen.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
