@@ -1,6 +1,7 @@
 ﻿using MicrophonePlugin;
 using NUnit.Framework;
 using System;
+using System.Reflection;
 
 namespace MicrophonePluginTests
 {
@@ -14,31 +15,30 @@ namespace MicrophonePluginTests
         {
             _microVM = new MicroVM();
         }
-
-        [TestCase("500")]
-        [TestCase("600")]
+        
+        [TestCase("500", nameof(MicroVM.TotalLenght))]
+        [TestCase("600", nameof(MicroVM.TotalLenght))]
+        [TestCase("100", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("100.1", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("100,1", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("50", nameof(MicroVM.HandleDiametr))]
+        [TestCase("50.1", nameof(MicroVM.HandleDiametr))]
+        [TestCase("50,1", nameof(MicroVM.HandleDiametr))]
+        [TestCase("120", nameof(MicroVM.HandleLenght))]
+        [TestCase("120.1", nameof(MicroVM.HandleLenght))]
+        [TestCase("120,1", nameof(MicroVM.HandleLenght))]
+        [TestCase("10", nameof(MicroVM.ClipLenght))]
+        [TestCase("10.1", nameof(MicroVM.ClipLenght))]
+        [TestCase("10,1", nameof(MicroVM.ClipLenght))]
         [Test, Description("Позитивный тест")]
-        public void SetTotalLenght(string arg)
-        {
-            _microVM.TotalLenght = arg;
-            Assert.AreEqual(_microVM.TotalLenght, arg, "данные не занеслись");
-        }
-
-        [TestCase("-1")]
-        [TestCase("200")]
-        [Test, Description("Не гативный тест")]
-        public void SetTotalLenghtNegative(string arg)
+        public void SetPositive(string arg, string typeName)
         {
             try
             {
-                _microVM.TotalLenght = arg;
-                Assert.Fail("значение было установлено");
-            }
-            catch(ArgumentException ex)
-            {
-                Assert.AreEqual(ex.Message, 
-                    "Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима", 
-                    "Текст ошибки не соответствует сообщению");
+                Type type = _microVM.GetType();
+                PropertyInfo prop = type.GetProperty(typeName);
+
+                prop.SetValue(_microVM, arg, null);
             }
             catch
             {
@@ -46,161 +46,42 @@ namespace MicrophonePluginTests
             }
         }
 
-        [TestCase("100")]
-        [TestCase("100.1")]
-        [TestCase("100,1")]
-        [Test, Description("Позитивный тест")]
-        public void SetCapsuleRadiusPositive(string arg)
-        {
-            try
-            {
-                _microVM.CapsuleRadius = arg;
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
-            }
-        }
 
-        [TestCase("-1", "Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки")]
-        [TestCase("1", "Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки")]
-        [TestCase("200", "Диаметр капсюли должен быть меньше 120 мм")]
-        [TestCase("asdfgh", "Недопустимые символы")]
+
+        [TestCase("-1", "Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима", nameof(MicroVM.TotalLenght))]
+        [TestCase("200", "Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима", nameof(MicroVM.TotalLenght))]
+        [TestCase("-1", "Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("1", "Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("200", "Диаметр капсюли должен быть меньше 120 мм", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("asdfgh", "Недопустимые символы", nameof(MicroVM.CapsuleRadius))]
+        [TestCase("-1", "Диаметр ручки должен быть больше 30 мм", nameof(MicroVM.HandleDiametr))]
+        [TestCase("1", "Диаметр ручки должен быть больше 30 мм", nameof(MicroVM.HandleDiametr))]
+        [TestCase("80.1", "Диаметр ручки должен быть меньше 80 мм", nameof(MicroVM.HandleDiametr))]
+        [TestCase("asdfgh", "Недопустимые символы", nameof(MicroVM.HandleDiametr))]
+        [TestCase("-1", "Длина ручки должна быть больше 110 мм", nameof(MicroVM.HandleLenght))]
+        [TestCase("109", "Длина ручки должна быть больше 110 мм", nameof(MicroVM.HandleLenght))]
+        [TestCase("asdfgh", "Недопустимые символы", nameof(MicroVM.HandleLenght))]
+        [TestCase("-1", "Длина зажима для капсюли должна быть больше 5 мм", nameof(MicroVM.ClipLenght))]
+        [TestCase("4", "Длина зажима для капсюли должна быть больше 5 мм", nameof(MicroVM.ClipLenght))]
+        [TestCase("21", "Длина зажима для капсюли должна быть меньше 20 мм", nameof(MicroVM.ClipLenght))]
+        [TestCase("asdfgh", "Недопустимые символы", nameof(MicroVM.ClipLenght))]
         [Test, Description("Негативный тест")]
-        public void SetCapsuleRadiusNegative(string arg, string mess)
+        public void SetNegative(string arg, string mess, string typeName)
         {
             try
             {
-                _microVM.CapsuleRadius = arg;
-                Assert.Fail("значение было установлено");
+                _microVM.GetType().InvokeMember(
+                        typeName,
+                        BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty,
+                        Type.DefaultBinder, 
+                        _microVM, 
+                        new object[] { arg });
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                Assert.AreEqual(ex.Message,
-                    mess, 
-                    "Текст ошибки не соответствует сообщению");
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
-            }
-        }
-
-        [TestCase("50")]
-        [TestCase("50.1")]
-        [TestCase("50,1")]
-        [Test, Description("Позитивный тест")]
-        public void SetHandleDiametrPositive(string arg)
-        {
-            try
-            {
-                _microVM.HandleDiametr = arg;
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
-            }
-        }
-
-        [TestCase("-1", "Диаметр ручки должен быть больше 30 мм")]
-        [TestCase("1", "Диаметр ручки должен быть больше 30 мм")]
-        [TestCase("80.1", "Диаметр ручки должен быть меньше 80 мм")]
-        [TestCase("asdfgh", "Недопустимые символы")]
-        [Test, Description("Негативный тест")]
-        public void SetHandleDiametrNegative(string arg, string mess)
-        {
-            try
-            {
-                _microVM.HandleDiametr = arg;
-                Assert.Fail("значение было установлено");
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.AreEqual(ex.Message,
+                Assert.AreEqual(ex.InnerException.Message,
                     mess,
                     "Текст ошибки не соответствует сообщению");
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
-            }
-        }
-
-        [TestCase("120")]
-        [TestCase("120.1")]
-        [TestCase("120,1")]
-        [Test, Description("Позитивный тест")]
-        public void SetHandleLenghtPositive(string arg)
-        {
-            try
-            {
-                _microVM.HandleLenght = arg;
-            }
-            catch(Exception ex)
-            {
-                Assert.Fail("Получена ошибка : " + ex.Message);
-            }
-        }
-
-        [TestCase("-1", "Длина ручки должна быть больше 110 мм")]
-        [TestCase("109", "Длина ручки должна быть больше 110 мм")]
-        [TestCase("asdfgh", "Недопустимые символы")]
-        [Test, Description("Негативный тест")]
-        public void SetHandleLenghtNegative(string arg, string mess)
-        {
-            try
-            {
-                _microVM.HandleLenght = arg;
-                Assert.Fail("значение было установлено");
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.AreEqual(ex.Message,
-                    mess,
-                    "Текст ошибки не соответствует сообщению");
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
-            }
-        }
-        [TestCase("10")]
-        [TestCase("10.1")]
-        [TestCase("10,1")]
-        [Test, Description("Позитивный тест")]
-        public void SetClipLenghtPositive(string arg)
-        {
-            try
-            {
-                _microVM.ClipLenght = arg;
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
-            }
-        }
-
-        [TestCase("-1", "Длина зажима для капсюли должна быть больше 5 мм")]
-        [TestCase("4", "Длина зажима для капсюли должна быть больше 5 мм")]
-        [TestCase("21", "Длина зажима для капсюли должна быть меньше 20 мм")]
-        [TestCase("asdfgh", "Недопустимые символы")]
-        [Test, Description("Негативный тест")]
-        public void SetCClipLenghtNegative(string arg, string mess)
-        {
-            try
-            {
-                _microVM.ClipLenght = arg;
-                Assert.Fail("значение было установлено");
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.AreEqual(ex.Message,
-                    mess,
-                    "Текст ошибки не соответствует сообщению");
-            }
-            catch
-            {
-                Assert.Fail("Получена не понятная ошибка");
             }
         }
     }

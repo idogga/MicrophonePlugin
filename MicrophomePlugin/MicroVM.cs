@@ -47,7 +47,9 @@ namespace MicrophonePlugin
             }
             set
             {
-                if(!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble))
+                if(!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
+                    || double.IsNaN(doble)
+                    || double.IsInfinity(doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -76,7 +78,9 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble))
+                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
+                    || double.IsNaN(doble)
+                    || double.IsInfinity(doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -108,7 +112,12 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble))
+                if (!double.TryParse(value.Replace(',', '.'), 
+                    System.Globalization.NumberStyles.Any, 
+                    System.Globalization.CultureInfo.InvariantCulture, 
+                    out double doble)
+                    || double.IsNaN(doble)
+                    || double.IsInfinity(doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -140,7 +149,9 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble))
+                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
+                    || double.IsNaN(doble)
+                    || double.IsInfinity(doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -167,7 +178,9 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble))
+                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
+                    || double.IsNaN(doble)
+                    || double.IsInfinity(doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -215,11 +228,17 @@ namespace MicrophonePlugin
                 waitWindow.Show();
                 await Task.Factory.StartNew(() =>
                 {
-                    using (var builder = new Builder(double.Parse(_capsuleDiametr.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_clipLenght.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_handleDiametr.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_handleLenght.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_totalLenght.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture)))
+                    using (var builder = new Builder(
+                        double.Parse(_capsuleDiametr.Replace(',', '.'), 
+                        System.Globalization.CultureInfo.InvariantCulture), 
+                        double.Parse(_clipLenght.Replace(',', '.'), 
+                        System.Globalization.CultureInfo.InvariantCulture), 
+                        double.Parse(_handleDiametr.Replace(',', '.'), 
+                        System.Globalization.CultureInfo.InvariantCulture), 
+                        double.Parse(_handleLenght.Replace(',', '.'), 
+                        System.Globalization.CultureInfo.InvariantCulture), 
+                        double.Parse(_totalLenght.Replace(',', '.'), 
+                        System.Globalization.CultureInfo.InvariantCulture)))
                     {
                     }
                 });
