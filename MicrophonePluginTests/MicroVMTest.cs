@@ -15,7 +15,9 @@ namespace MicrophonePluginTests
         {
             _microVM = new MicroVM();
         }
-        
+
+        [TestCase("0.02", nameof(MicroVM.GridLenght))]
+        [TestCase("1", nameof(MicroVM.GridLenght))]
         [TestCase("500", nameof(MicroVM.TotalLenght))]
         [TestCase("600", nameof(MicroVM.TotalLenght))]
         [TestCase("100", nameof(MicroVM.CapsuleRadius))]
@@ -47,7 +49,9 @@ namespace MicrophonePluginTests
 
 
 
-        [TestCase("-1", "Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима", nameof(MicroVM.TotalLenght))]
+        [TestCase("-1", "Толщина сетки должна быть больше 0.01 мм", nameof(MicroVM.GridLenght))]
+        [TestCase("2", "Толщина сетки должна быть меньше 2 мм", nameof(MicroVM.GridLenght))]
+        [TestCase("фывфыв", "Недопустимые символы", nameof(MicroVM.GridLenght))]
         [TestCase("200", "Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима", nameof(MicroVM.TotalLenght))]
         [TestCase("-1", "Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки", nameof(MicroVM.CapsuleRadius))]
         [TestCase("1", "Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки", nameof(MicroVM.CapsuleRadius))]
