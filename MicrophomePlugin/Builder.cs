@@ -32,10 +32,6 @@ namespace MicrophonePlugin
             }
         }
 
-        private void PullBase(ksDocument3D document)
-        {
-        }
-
         private void CreateBase(CadConnect connector, ksDocument3D document, double capsuleRadius, double clipLenght, double handleRadius, double handleLenght, double totalLenght, double gridLenght)
         {
             var part = (ksPart)document.GetPart((short)Part_Type.pTop_Part);
@@ -77,9 +73,9 @@ namespace MicrophonePlugin
             document.drawMode = 3;
 
             CreateHorizontalTors(part, totalLenght, gridLenght, capsuleRadius);
-            CreateVerticalTors1(part, totalLenght, gridLenght, capsuleRadius);
+            CreateVerticalTorsRight(part, totalLenght, gridLenght, capsuleRadius);
             
-                CreateVerticalTors(part, totalLenght, gridLenght, capsuleRadius);
+                CreateVerticalTorsLeft(part, totalLenght, gridLenght, capsuleRadius);
         }
 
         private void CreateHorizontalTors(ksPart part, double totalLenght, double gridLenght, double capsuleRadius)
@@ -113,7 +109,7 @@ namespace MicrophonePlugin
 
         }
 
-        private void CreateVerticalTors(ksPart part, double totalLenght, double gridLenght, double capsuleRadius)
+        private void CreateVerticalTorsLeft(ksPart part, double totalLenght, double gridLenght, double capsuleRadius)
         {
             var start = totalLenght;
             while (start > totalLenght - capsuleRadius)
@@ -142,7 +138,7 @@ namespace MicrophonePlugin
             }
         }
 
-        private void CreateVerticalTors1(ksPart part, double totalLenght, double gridLenght, double capsuleRadius)
+        private void CreateVerticalTorsRight(ksPart part, double totalLenght, double gridLenght, double capsuleRadius)
         {
             var start = totalLenght - capsuleRadius;
             while (start < totalLenght)
