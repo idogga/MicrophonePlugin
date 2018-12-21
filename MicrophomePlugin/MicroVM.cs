@@ -19,12 +19,13 @@ namespace MicrophonePlugin
         private const double _clipLenghtConst = 15;
         private const double _gridLenghtConst = 1;
         #endregion
-        private string _totalLenght = _totalLenghtConst.ToString("0.00");
-        private string _capsuleDiametr = _capsuleDiametrConst.ToString("0.00");
-        private string _handleDiametr = _handleDiametrConst.ToString("0.00");
-        private string _handleLenght = _handleLenghtConst.ToString("0.00");
-        private string _clipLenght = _clipLenghtConst.ToString("0.00");
-        private string _gridLenght = _gridLenghtConst.ToString("0.00");
+
+        private string _totalLenght;
+        private string _capsuleDiametr;
+        private string _handleDiametr;
+        private string _handleLenght;
+        private string _clipLenght;
+        private string _gridLenght;
 
         private bool? _isEnableBuild = true;
         /// <summary>
@@ -36,7 +37,8 @@ namespace MicrophonePlugin
         /// Установка значений по-умолчанию
         /// </summary>
         public DelegateCommand MakeDefault { get; }
-        
+
+        private Parameters _parameters;
 
         /// <summary>
         /// Общая длина микрофона
@@ -54,13 +56,20 @@ namespace MicrophonePlugin
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
-                if (doble <= double.Parse(_capsuleDiametr) + double.Parse(_handleLenght) + double.Parse(_clipLenght))
+                try
+                {
+                    _parameters.TotalLenght = doble;
+                }
+                catch(ArgumentException ex)
                 {
                     IsEnableBuild = false;
-                    throw new ArgumentException("Общая длина должна быть больше суммы диаметра капсюли, длины ручки и длины зажима");
+                    throw ex;
                 }
-                IsEnableBuild = true;
-                _totalLenght = value;
+                finally
+                {
+                    IsEnableBuild = true;
+                    _totalLenght = value;
+                }
             }
         }
 
@@ -83,19 +92,21 @@ namespace MicrophonePlugin
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
-                if (doble <= double.Parse(_handleDiametr) * 1.5)
+                try
+                {
+                    _parameters.CapsuleRadius = doble;
+                }
+                catch (ArgumentException ex)
                 {
                     IsEnableBuild = false;
-                    throw new ArgumentException("Диаметр капсюли должен быть в 1.5 раза больше диаметра ручки");
+                    throw ex;
                 }
-                if (doble > 120)
+                finally
                 {
-                    IsEnableBuild = false;
-                    throw new ArgumentException("Диаметр капсюли должен быть меньше 120 мм");
+                    IsEnableBuild = true;
+                    _capsuleDiametr = value;
+                    RaisePropertyChanged("TotalLenght");
                 }
-                IsEnableBuild = true;
-                _capsuleDiametr = value;
-                RaisePropertyChanged("TotalLenght");
             }
         }
 
@@ -115,19 +126,21 @@ namespace MicrophonePlugin
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
-                if (doble <= 30)
+                try
+                {
+                    _parameters.HandleDiametr = doble;
+                }
+                catch (ArgumentException ex)
                 {
                     IsEnableBuild = false;
-                    throw new ArgumentException("Диаметр ручки должен быть больше 30 мм");
+                    throw ex;
                 }
-                if (doble > 80)
+                finally
                 {
-                    IsEnableBuild = false;
-                    throw new ArgumentException("Диаметр ручки должен быть меньше 80 мм");
+                    IsEnableBuild = true;
+                    _handleDiametr = value;
+                    RaisePropertyChanged("CapsuleRadius");
                 }
-                IsEnableBuild = true;
-                _handleDiametr = value;
-                RaisePropertyChanged("CapsuleRadius");
             }
         }
 
@@ -147,14 +160,21 @@ namespace MicrophonePlugin
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
-                if (doble <= 110)
+                try
+                {
+                    _parameters.HandleLenght = doble;
+                }
+                catch (ArgumentException ex)
                 {
                     IsEnableBuild = false;
-                    throw new ArgumentException("Длина ручки должна быть больше 110 мм");
+                    throw ex;
                 }
-                IsEnableBuild = true;
-                _handleLenght = value;
-                RaisePropertyChanged("TotalLenght");
+                finally
+                {
+                    IsEnableBuild = true;
+                    _handleLenght = value;
+                    RaisePropertyChanged("TotalLenght");
+                }
             }
         }
 
@@ -174,19 +194,21 @@ namespace MicrophonePlugin
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
-                if (doble <= 5)
+                try
+                {
+                    _parameters.ClipLenght = doble;
+                }
+                catch (ArgumentException ex)
                 {
                     IsEnableBuild = false;
-                    throw new ArgumentException("Длина зажима для капсюли должна быть больше 5 мм");
+                    throw ex;
                 }
-                if (doble > 20)
+                finally
                 {
-                    IsEnableBuild = false;
-                    throw new ArgumentException("Длина зажима для капсюли должна быть меньше 20 мм");
+                    IsEnableBuild = true;
+                    _clipLenght = value;
+                    RaisePropertyChanged("TotalLenght");
                 }
-                _clipLenght = value;
-                IsEnableBuild = true;
-                RaisePropertyChanged("TotalLenght");
             }
         }
 
@@ -206,18 +228,20 @@ namespace MicrophonePlugin
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
                 }
-                if (doble <= 0.01)
+                try
+                {
+                    _parameters.GridLenght = doble;
+                }
+                catch (ArgumentException ex)
                 {
                     IsEnableBuild = false;
-                    throw new ArgumentException("Толщина сетки должна быть больше 0.01 мм");
+                    throw ex;
                 }
-                if (doble > 2)
+                finally
                 {
-                    IsEnableBuild = false;
-                    throw new ArgumentException("Толщина сетки должна быть меньше 2 мм");
+                    IsEnableBuild = true;
+                    _gridLenght = value;
                 }
-                _gridLenght = value;
-                IsEnableBuild = true;
             }
         }
 
@@ -242,34 +266,35 @@ namespace MicrophonePlugin
         /// </summary>
         public MicroVM()
         {
+            _parameters = new Parameters();
             Build = new DelegateCommand(async () =>
             {
                 var waitWindow = new WaitWindow();
                 waitWindow.Show();
                 await Task.Factory.StartNew(() =>
                 {
-                    using (var builder = new Builder(Parse(_capsuleDiametr),
-                        Parse(_clipLenght),
-                        Parse(_handleDiametr),
-                        Parse(_handleLenght),
-                        Parse(_totalLenght),
-                        Parse(_gridLenght)))
+                    using (var builder = new Builder(_parameters))
                     {
                     }
                 });
                 waitWindow.Close();
             });
-
+            SetDefaultProperties();
             MakeDefault = new DelegateCommand(() =>
             {
-                TotalLenght = _totalLenghtConst.ToString("0.##");
-                HandleLenght = _handleLenghtConst.ToString("0.##");
-                ClipLenght = _clipLenghtConst.ToString("0.##");
-                HandleDiametr = _handleDiametrConst.ToString("0.##"); ;
-                CapsuleRadius = _capsuleDiametrConst.ToString("0.##");
-                GridLenght = _gridLenghtConst.ToString("0.##");
-                Debug.WriteLine("Установить значение по-умолчанию");
+                SetDefaultProperties();
             });
+        }
+
+        private void SetDefaultProperties()
+        {
+            TotalLenght = _totalLenghtConst.ToString("0.##");
+            HandleLenght = _handleLenghtConst.ToString("0.##");
+            ClipLenght = _clipLenghtConst.ToString("0.##");
+            HandleDiametr = _handleDiametrConst.ToString("0.##"); ;
+            CapsuleRadius = _capsuleDiametrConst.ToString("0.##");
+            GridLenght = _gridLenghtConst.ToString("0.##");
+            Debug.WriteLine("Установить значение по-умолчанию");
         }
 
         private bool IsNumber(string str, out double number)

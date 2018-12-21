@@ -12,13 +12,8 @@ namespace MicrophonePlugin
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="capsuleDiametr">диаметр капсюли</param>
-        /// <param name="clipLenght">длина зажима</param>
-        /// <param name="handleDiametr">диаметр ручки</param>
-        /// <param name="handleLenght">длина ручки</param>
-        /// <param name="totalLenght">общая длина микрофона</param>
-        /// <param name="gridLenght">ширина сетки</param>
-        public Builder(double capsuleDiametr, double clipLenght, double handleDiametr, double handleLenght, double totalLenght, double gridLenght)
+        /// <param name="parameters">Параметры</param>
+        public Builder(Parameters parameters)
         {
             using (var connector = new CadConnect())
             {
@@ -26,8 +21,11 @@ namespace MicrophonePlugin
                 document.Create(false, true);
                 document = (ksDocument3D)connector.Kompas.ActiveDocument3D();
                 var part = (ksPart)document.GetPart((short)Part_Type.pTop_Part);
-                CreateBase(connector, document, capsuleDiametr / 2, clipLenght, handleDiametr /2, handleLenght, totalLenght, gridLenght);
-                PullBase(document);
+                CreateBase(connector, document, parameters.CapsuleRadius / 2, 
+                    parameters.ClipLenght, parameters.HandleDiametr / 2,
+                    parameters.HandleLenght,
+                    parameters.TotalLenght,
+                    parameters.GridLenght);
                 connector.Kompas.Visible = true;
             }
         }
@@ -160,7 +158,6 @@ namespace MicrophonePlugin
 
                 _sketchEdit.ksLineSeg(totalLenght - capsuleRadius, -capsuleRadius, totalLenght - capsuleRadius, capsuleRadius, 3);
                 _sketchDefinition.EndEdit();
-
                 entityRotatedDefinition.directionType = 3;
                 entityRotatedDefinition.SetSideParam(true, 180);
                 entityRotatedDefinition.SetSketch(_entitySketch);
