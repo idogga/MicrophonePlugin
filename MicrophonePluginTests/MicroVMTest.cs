@@ -37,7 +37,6 @@ namespace MicrophonePluginTests
             {
                 Type type = _microVM.GetType();
                 PropertyInfo prop = type.GetProperty(typeName);
-
                 prop.SetValue(_microVM, arg, null);
             }
             catch

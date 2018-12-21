@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource CustomWindow}">
     <Window.DataContext>
-        <local:MicroVM/>
+        <local:MicroVM />
     </Window.DataContext>
 
     <Window.Resources>
@@ -46,6 +46,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -133,6 +134,24 @@
                        Grid.Row="4">
                 <TextBox.Text>
                     <Binding Path="TotalLenght" 
+                             Mode="TwoWay"
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock Text="Толщина сетки :"
+                       Style="{DynamicResource TextBlockInGrid}"
+                       Grid.Column="0"
+                       Grid.Row="5"/>
+            <TextBox Style="{DynamicResource TextBoxInGrid}"
+                     Grid.Column="1"
+                       Grid.Row="5">
+                <TextBox.Text>
+                    <Binding Path="GridLenght" 
                              Mode="TwoWay"
                              NotifyOnValidationError="True"
                              UpdateSourceTrigger="PropertyChanged">

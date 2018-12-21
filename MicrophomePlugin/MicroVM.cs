@@ -17,13 +17,15 @@ namespace MicrophonePlugin
         private const double _handleDiametrConst = 50;
         private const double _handleLenghtConst = 250;
         private const double _clipLenghtConst = 15;
-
+        private const double _gridLenghtConst = 1;
         #endregion
         private string _totalLenght = _totalLenghtConst.ToString("0.00");
         private string _capsuleDiametr = _capsuleDiametrConst.ToString("0.00");
         private string _handleDiametr = _handleDiametrConst.ToString("0.00");
         private string _handleLenght = _handleLenghtConst.ToString("0.00");
         private string _clipLenght = _clipLenghtConst.ToString("0.00");
+        private string _gridLenght = _gridLenghtConst.ToString("0.00");
+
         private bool? _isEnableBuild = true;
         /// <summary>
         /// Построение можели
@@ -47,9 +49,7 @@ namespace MicrophonePlugin
             }
             set
             {
-                if(!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
-                    || double.IsNaN(doble)
-                    || double.IsInfinity(doble))
+                if (!IsNumber(value, out double doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -78,9 +78,7 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
-                    || double.IsNaN(doble)
-                    || double.IsInfinity(doble))
+                if (!IsNumber(value, out double doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -112,12 +110,7 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), 
-                    System.Globalization.NumberStyles.Any, 
-                    System.Globalization.CultureInfo.InvariantCulture, 
-                    out double doble)
-                    || double.IsNaN(doble)
-                    || double.IsInfinity(doble))
+                if (!IsNumber(value, out double doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -149,9 +142,7 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
-                    || double.IsNaN(doble)
-                    || double.IsInfinity(doble))
+                if (!IsNumber(value, out double doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -178,9 +169,7 @@ namespace MicrophonePlugin
             }
             set
             {
-                if (!double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doble)
-                    || double.IsNaN(doble)
-                    || double.IsInfinity(doble))
+                if (!IsNumber(value, out double doble))
                 {
                     IsEnableBuild = false;
                     throw new ArgumentException("Недопустимые символы");
@@ -198,6 +187,37 @@ namespace MicrophonePlugin
                 _clipLenght = value;
                 IsEnableBuild = true;
                 RaisePropertyChanged("TotalLenght");
+            }
+        }
+
+        /// <summary>
+        /// Толщина сетки
+        /// </summary>
+        public string GridLenght
+        {
+            get
+            {
+                return _gridLenght;
+            }
+            set
+            {
+                if (!IsNumber(value, out double doble))
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Недопустимые символы");
+                }
+                if (doble <= 0.01)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Толщина сетки должна быть больше 0.01 мм");
+                }
+                if (doble > 2)
+                {
+                    IsEnableBuild = false;
+                    throw new ArgumentException("Толщина сетки должна быть меньше 2 мм");
+                }
+                _gridLenght = value;
+                IsEnableBuild = true;
             }
         }
 
@@ -228,17 +248,12 @@ namespace MicrophonePlugin
                 waitWindow.Show();
                 await Task.Factory.StartNew(() =>
                 {
-                    using (var builder = new Builder(
-                        double.Parse(_capsuleDiametr.Replace(',', '.'), 
-                        System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_clipLenght.Replace(',', '.'), 
-                        System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_handleDiametr.Replace(',', '.'), 
-                        System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_handleLenght.Replace(',', '.'), 
-                        System.Globalization.CultureInfo.InvariantCulture), 
-                        double.Parse(_totalLenght.Replace(',', '.'), 
-                        System.Globalization.CultureInfo.InvariantCulture)))
+                    using (var builder = new Builder(Parse(_capsuleDiametr),
+                        Parse(_clipLenght),
+                        Parse(_handleDiametr),
+                        Parse(_handleLenght),
+                        Parse(_totalLenght),
+                        Parse(_gridLenght)))
                     {
                     }
                 });
@@ -252,8 +267,22 @@ namespace MicrophonePlugin
                 ClipLenght = _clipLenghtConst.ToString("0.##");
                 HandleDiametr = _handleDiametrConst.ToString("0.##"); ;
                 CapsuleRadius = _capsuleDiametrConst.ToString("0.##");
+                GridLenght = _gridLenghtConst.ToString("0.##");
                 Debug.WriteLine("Установить значение по-умолчанию");
             });
+        }
+
+        private bool IsNumber(string str, out double number)
+        {
+            return double.TryParse(str.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out number)
+                    || double.IsNaN(number)
+                    || double.IsInfinity(number);
+        }
+
+        private double Parse(string str)
+        {
+            return double.Parse(str.Replace(',', '.'),
+                        System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }
